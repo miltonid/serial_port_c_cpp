@@ -309,3 +309,12 @@ void Serial::configureTermios() {
         printf("Error %i from tcsetattr: %s\n", errno, strerror(errno));
     }
 }
+
+char *Serial::getSerialPortName() {
+	char *ret = &this->serDevice[0];
+	return ret;
+}
+
+int Serial::getBaudRate() {
+	return this->baudRate;
+}

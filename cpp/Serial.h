@@ -23,11 +23,13 @@ class Serial {
 public:
 	Serial(char const *ser, int baudRate);
 	virtual ~Serial();
-	void openSerialPort(int timeOut);
+	int openSerialPort(int timeOut);
 	int readBytes(char *buff, int len);
 	int writeBytes(const char *buff, int len);
 	void closeSerialPort();
 	int readLine(char *buff, int max);
+	char *getSerialPortName();
+	int getBaudRate();
 
 private:
 	int fd;
