@@ -10,6 +10,7 @@
 Serial::Serial(char const *ser, int baudRate) {
 	// TODO Auto-generated constructor stub
 	this->baudRate = baudRate;
+	bzero(this->serDevice, sizeof(this->serDevice));
 	strcpy(this->serDevice, ser);
 	this->fd = -1;
 	this->flowControl = 0; //0 None / 1 Enable RTS/CTS hardware flow control
@@ -22,26 +23,28 @@ Serial::~Serial() {
 	// TODO Auto-generated destructor stub
 }
 
-void Serial::openSerialPort(int timeOut) {
+int Serial::openSerialPort(int timeOut) {
 	this->fd = open(this->serDevice, O_RDWR | O_NOCTTY | O_SYNC);
 	if (this->fd < 0) {
 	    printf("Error %i from open: %s\n", errno, strerror(errno));
-	    return;
+	    return -1;
 	}
 
 	if (this->fd == 2) { //No such file or directory
 		printf("Error %i from open: %s\n", errno, strerror(errno));
-		return;
+		return -1;
 	}
 
 	if (this->fd == 13) { //Permission denied
 		printf("Error %i from open: %s\n", errno, strerror(errno));
-		return;
+		return -1;
 	}
 
 	this->timeOutms = timeOut;
 
 	configureTermios();
+
+	return 0;
 }
 
 int Serial::readBytes(char *buff, int len){
